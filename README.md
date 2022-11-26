@@ -19,3 +19,7 @@ cargo run --bin helloworld-server
 grpcurl -plaintext -import-path ./proto -proto helloworld.proto -d '{"name": "Tonic"}' '[::]:50051' helloworld.Greeter/SayHello
 ```
 
+## Appendix
+```sh
+cargo run --bin helloworld-client
+```
