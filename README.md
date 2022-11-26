@@ -7,7 +7,6 @@ https://github.com/hyperium/tonic/blob/master/examples/helloworld-tutorial.md
 If you've never run it.
 ```
 brew install protobuf
-brew install grpcurl
 ```
 
 ## Run
@@ -15,11 +14,19 @@ brew install grpcurl
 cargo run --bin helloworld-server
 ```
 ## Usage
+If you've never run it.
+```
+brew install grpcurl
+```
 ```sh
 grpcurl -plaintext -import-path ./proto -proto helloworld.proto -d '{"name": "Tonic"}' '[::]:50051' helloworld.Greeter/SayHello
 ```
 
-## Appendix
+### Another
 ```sh
 cargo run --bin helloworld-client
+```
+```sh
+curl -i http://localhost:8080/health
+curl -i http://localhost:8080/metrics
 ```
