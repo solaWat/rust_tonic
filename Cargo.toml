@@ -15,6 +15,8 @@ path = "src/client.rs"
 tonic = "0.8"
 prost = "0.11"
 tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+metrics-exporter-prometheus = "0.11.0"
+metrics = "0.20.1"
 
 [build-dependencies]
 tonic-build = "0.8"

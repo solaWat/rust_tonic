@@ -3,6 +3,11 @@ use tonic::{transport::Server, Request, Response, Status};
 use hello_world::greeter_server::{Greeter, GreeterServer};
 use hello_world::{HelloReply, HelloRequest};
 
+use metrics::{histogram, increment_counter, increment_gauge};
+use metrics_exporter_prometheus::PrometheusBuilder;
+
+use std::time::Instant;
+
 pub mod hello_world {
     tonic::include_proto!("helloworld"); // The string specified here must match the proto package name
 }
@@ -23,6 +28,12 @@ impl Greeter for MyGreeter {
             message: format!("Hello {}!", request.into_inner().name).into(), // We must use .into_inner() as the fields of gRPC requests and responses are private
         };
 
+        let now = Instant::now();
+
+        histogram!("foo_histgram", now.elapsed(), "api" => "echo", "result" => "ok");
+        increment_counter!("foo_counter");
+        increment_gauge!("foo_gauge", 10.0);
+
         Ok(Response::new(reply)) // Send back our formatted greeting
     }
 }
@@ -31,6 +42,8 @@ impl Greeter for MyGreeter {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "[::1]:50051".parse()?;
     let greeter = MyGreeter::default();
+
+    PrometheusBuilder::new().install()?;
 
     Server::builder()
         .add_service(GreeterServer::new(greeter))
