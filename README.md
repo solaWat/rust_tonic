@@ -27,5 +27,5 @@ grpcurl -plaintext -import-path ./proto -proto helloworld.proto -d '{"name": "To
 cargo run --bin helloworld-client
 ```
 ```sh
-curl http://localhost:9000/
+curl -i http://localhost:9000/
 ```

@@ -6,6 +6,7 @@ use hello_world::{HelloReply, HelloRequest};
 use metrics::{histogram, increment_counter, increment_gauge};
 use metrics_exporter_prometheus::PrometheusBuilder;
 
+use std::net::SocketAddr;
 use std::time::Instant;
 
 pub mod hello_world {
@@ -43,7 +44,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = "[::1]:50051".parse()?;
     let greeter = MyGreeter::default();
 
-    PrometheusBuilder::new().install()?;
+    let metrics_addr: SocketAddr = "[::1]:8081".parse()?;
+    PrometheusBuilder::new()
+        .with_http_listener(metrics_addr)
+        .install()?;
 
     Server::builder()
         .add_service(GreeterServer::new(greeter))
