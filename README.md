@@ -18,14 +18,17 @@ If you've never run it.
 ```
 brew install grpcurl
 ```
+### curl
 ```sh
 grpcurl -plaintext -import-path ./proto -proto helloworld.proto -d '{"name": "Tonic"}' '[::]:50051' helloworld.Greeter/SayHello
 ```
 
 ## Appendix
+### client
 ```sh
 cargo run --bin helloworld-client
 ```
+### metrics
 ```sh
-curl -i http://localhost:9000/
+curl -i http://localhost:8081/
 ```
