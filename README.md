@@ -18,9 +18,15 @@ If you've never run it.
 ```
 brew install grpcurl
 ```
-### curl
+### request
 ```sh
 grpcurl -plaintext -import-path ./proto -proto helloworld.proto -d '{"name": "Tonic"}' '[::]:50051' helloworld.Greeter/SayHello
+```
+### heakth check
+```sh
+grpcurl -plaintext -d '{"service": "mygrpc"}' [::]:50051 grpc.health.v1.Health.Check
+
+grpcurl -plaintext [::]:50051 grpc.health.v1.Health.Check
 ```
 
 ## Appendix

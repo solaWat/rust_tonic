@@ -9,6 +9,8 @@ use metrics_exporter_prometheus::PrometheusBuilder;
 use std::net::SocketAddr;
 use std::time::Instant;
 
+use tonic_health::server::{health_reporter, HealthReporter};
+
 pub mod hello_world {
     tonic::include_proto!("helloworld"); // The string specified here must match the proto package name
 }
@@ -41,6 +43,8 @@ impl Greeter for MyGreeter {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let (mut health_reporter, health_service) = health_reporter();
+
     let addr = "0.0.0.0:50051".parse()?;
     let greeter = MyGreeter::default();
 
@@ -49,7 +53,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_http_listener(metrics_addr)
         .install()?;
 
+    println!("HealthServer + GreeterServer listening on {}", addr);
+
     Server::builder()
+        .add_service(health_service)
         .add_service(GreeterServer::new(greeter))
         .serve(addr)
         .await?;
